@@ -1,0 +1,128 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "YoutubeDownloader/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.OpenApi": "10.0.0",
+          "YoutubeExplode": "6.5.7",
+          "YoutubeExplode.Converter": "6.5.7"
+        },
+        "runtime": {
+          "YoutubeDownloader.dll": {}
+        }
+      },
+      "AngleSharp/1.4.0": {
+        "runtime": {
+          "lib/net10.0/AngleSharp.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "CliWrap/3.10.0": {
+        "runtime": {
+          "lib/net10.0/CliWrap.dll": {
+            "assemblyVersion": "3.10.0.0",
+            "fileVersion": "3.10.0.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.OpenApi/10.0.0": {
+        "dependencies": {
+          "Microsoft.OpenApi": "2.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.OpenApi/2.0.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.OpenApi.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "YoutubeExplode/6.5.7": {
+        "dependencies": {
+          "AngleSharp": "1.4.0"
+        },
+        "runtime": {
+          "lib/net10.0/YoutubeExplode.dll": {
+            "assemblyVersion": "6.5.7.0",
+            "fileVersion": "6.5.7.0"
+          }
+        }
+      },
+      "YoutubeExplode.Converter/6.5.7": {
+        "dependencies": {
+          "CliWrap": "3.10.0",
+          "YoutubeExplode": "6.5.7"
+        },
+        "runtime": {
+          "lib/net10.0/YoutubeExplode.Converter.dll": {
+            "assemblyVersion": "6.5.7.0",
+            "fileVersion": "6.5.7.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "YoutubeDownloader/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AngleSharp/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6ph8mpaQx0KL0COYRt0kI8MB9gSp1PtKijKMhJU//+aVFgKAJLKDesG/+26JSaVCOrHNgPf12wpfoyRcMYOeXg==",
+      "path": "anglesharp/1.4.0",
+      "hashPath": "anglesharp.1.4.0.nupkg.sha512"
+    },
+    "CliWrap/3.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Igph39WNImUFqQrpTeBDPafcCnM1u/8IooZHqMRF/5JdV5H78p+AbZkeYY1Nkz1WlbI/Gt2Hq/3rYh55jxRF9Q==",
+      "path": "cliwrap/3.10.0",
+      "hashPath": "cliwrap.3.10.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.OpenApi/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0aqIF1t+sA2T62LIeMtXGSiaV7keGQaJnvwwmu+htQdjCaKYARfXAeqp4nHH9y2etpilyZ/tnQzZg4Ilmo/c4Q==",
+      "path": "microsoft.aspnetcore.openapi/10.0.0",
+      "hashPath": "microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.OpenApi/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GGYLfzV/G/ct80OZ45JxnWP7NvMX1BCugn/lX7TH5o0lcVaviavsLMTxmFV2AybXWjbi3h6FF1vgZiTK6PXndw==",
+      "path": "microsoft.openapi/2.0.0",
+      "hashPath": "microsoft.openapi.2.0.0.nupkg.sha512"
+    },
+    "YoutubeExplode/6.5.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oIJpcxpgSUaPxg73iYj1a0hckbCbOHOrE1OzeCH9lNf6oRjJp2awOyPaWvf1qRm6kYFJ88FktdMeT+lGyNUcvA==",
+      "path": "youtubeexplode/6.5.7",
+      "hashPath": "youtubeexplode.6.5.7.nupkg.sha512"
+    },
+    "YoutubeExplode.Converter/6.5.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jzZfBqfnC3G8ewxc75dddrpA5I4eI9+FFGO2IwrWwEyXQFgq2XxzstaaZ52lBQmCH5EqY3XV476gsKnIDGa11Q==",
+      "path": "youtubeexplode.converter/6.5.7",
+      "hashPath": "youtubeexplode.converter.6.5.7.nupkg.sha512"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "3kUghEASql0=",
+  "success": true,
+  "projectFilePath": "/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/YoutubeDownloader.csproj",
+  "expectedPackageFiles": [
+    "/Users/aybarozcan/.nuget/packages/anglesharp/1.4.0/anglesharp.1.4.0.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/cliwrap/3.10.0/cliwrap.3.10.0.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/youtubeexplode/6.5.7/youtubeexplode.6.5.7.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/youtubeexplode.converter/6.5.7/youtubeexplode.converter.6.5.7.nupkg.sha512"
+  ],
+  "logs": []
+}

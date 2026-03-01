@@ -1,0 +1,434 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Dark theme ── */
+:root[data-theme="dark"] {
+  --bg: #0f0f13;
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #1a1a3e 0%, #0f0f13 60%);
+  --surface: #16213e;
+  --surface-alt: #1a1a2e;
+  --primary: #e94560;
+  --primary-hover: #ff5c75;
+  --primary-gradient: linear-gradient(135deg, #e94560, #ff7b95);
+  --primary-contrast: #ffffff;
+  --text: #e8e8e8;
+  --text-secondary: #a0a0b0;
+  --border: #2a2a4a;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --radius: 12px;
+  --toggle-bg: #1a1a2e;
+  --toggle-icon: '☀️';
+}
+
+/* ── Light theme ── */
+:root[data-theme="light"] {
+  --bg: #f0f2f7;
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #e8eaf6 0%, #f0f2f7 60%);
+  --surface: #ffffff;
+  --surface-alt: #f5f7fa;
+  --primary: #e94560;
+  --primary-hover: #d6304d;
+  --primary-gradient: linear-gradient(135deg, #e94560, #ff7b95);
+  --primary-contrast: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #dde1ea;
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
+  --radius: 12px;
+  --toggle-bg: #e8eaf6;
+  --toggle-icon: '🌙';
+}
+
+body {
+  background: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+/* ── Top accent bar ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  z-index: 100;
+}
+
+/* ── Layout ── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 720px;
+  padding: 64px 20px 40px;
+}
+
+/* ── Toolbar (top-right buttons) ── */
+.toolbar {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 200;
+  display: flex;
+  gap: 8px;
+}
+
+.theme-toggle,
+.lang-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: background-color 0.25s, border-color 0.25s, transform 0.15s;
+}
+
+.theme-toggle {
+  font-size: 1.1rem;
+}
+
+.lang-toggle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+}
+
+.theme-toggle:hover,
+.lang-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── Title ── */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 36px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* ── URL row ── */
+.url-row {
+  display: flex;
+  gap: 10px;
+}
+
+.url-input {
+  flex: 1;
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--text);
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.url-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.url-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+}
+
+/* ── Buttons ── */
+.btn {
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  transition: filter 0.2s, opacity 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: var(--primary-contrast);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fetch-btn {
+  white-space: nowrap;
+  min-width: 92px;
+}
+
+/* ── Alert ── */
+.alert {
+  background: rgba(233, 69, 96, 0.12);
+  border: 1px solid rgba(233, 69, 96, 0.4);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.alert-close:hover {
+  color: var(--primary);
+}
+
+/* ── Video card ── */
+.video-card {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.thumbnail {
+  width: 192px;
+  height: 108px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.video-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.video-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-author {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.duration-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+/* ── Section label ── */
+.section-label {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ── Stream buttons ── */
+.stream-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.stream-btn {
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 108px;
+  padding: 10px 14px;
+  transition: border-color 0.2s, background-color 0.2s, transform 0.1s;
+}
+
+.stream-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.stream-btn.selected {
+  background: var(--primary-gradient);
+  border-color: transparent;
+  color: var(--primary-contrast);
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.4);
+}
+
+.stream-quality {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.stream-meta {
+  font-size: 0.7rem;
+  opacity: 0.72;
+  margin-top: 3px;
+}
+
+/* ── Download button ── */
+.download-btn {
+  width: 100%;
+  height: 54px;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(233, 69, 96, 0.35);
+}
+
+/* ── Spinner ── */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Footer ── */
+.footer {
+  width: 100%;
+  padding: 20px 16px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-name {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.footer-divider {
+  width: 32px;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 8px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 540px) {
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .url-row {
+    flex-direction: column;
+  }
+
+  .video-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .thumbnail {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .main {
+    padding: 48px 16px 32px;
+  }
+}
