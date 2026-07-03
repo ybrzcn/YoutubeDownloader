@@ -35,3 +35,4 @@
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/YoutubeDownloader.pdb
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/YoutubeDownloader.genruntimeconfig.cache
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/ref/YoutubeDownloader.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/YoutubeDownloader.sourcelink.json

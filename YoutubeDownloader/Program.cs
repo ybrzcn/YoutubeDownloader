@@ -7,7 +7,19 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<YoutubeClient>();
+builder.Services.AddSingleton<YoutubeClient>(sp =>
+{
+    var handler = new HttpClientHandler
+    {
+        UseCookies = true,
+        CookieContainer = new System.Net.CookieContainer()
+    };
+    var httpClient = new HttpClient(handler)
+    {
+        Timeout = TimeSpan.FromMinutes(5)
+    };
+    return new YoutubeClient(httpClient);
+});
 builder.Services.AddScoped<IVideoService, VideoService>();
 
 builder.Services.AddCors(options =>
