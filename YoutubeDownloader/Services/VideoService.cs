@@ -128,6 +128,20 @@ public class VideoService : IVideoService
         return title;
     }
 
+    public async Task<string> GetDirectUrlAsync(string url, string type, int maxHeight, bool audioOnly)
+    {
+        string format;
+        if (audioOnly)
+            format = "bestaudio[ext=m4a]/bestaudio";
+        else if (type == "adaptive")
+            format = $"bestvideo[height<={maxHeight}][ext=mp4]+bestaudio[ext=m4a]/best[height<={maxHeight}]";
+        else
+            format = $"best[height<={maxHeight}][ext=mp4]/best[ext=mp4]";
+
+        var result = await RunYtDlp($"-f \"{format}\" --get-url \"{url}\"");
+        return result.Split('\n')[0];
+    }
+
     public async Task DownloadMuxedAsync(string url, string quality, Stream outputStream)
     {
         var tempFile = Path.GetTempFileName() + ".mp4";
