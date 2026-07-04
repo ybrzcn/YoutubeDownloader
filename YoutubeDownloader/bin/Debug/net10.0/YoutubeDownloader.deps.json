@@ -8,9 +8,10 @@
     ".NETCoreApp,Version=v10.0": {
       "YoutubeDownloader/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.OpenApi": "10.0.0",
-          "YoutubeExplode": "6.5.7",
-          "YoutubeExplode.Converter": "6.5.7"
+          "Microsoft.AspNetCore.OpenApi": "10.0.9",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.2",
+          "YoutubeExplode": "6.6.0",
+          "YoutubeExplode.Converter": "6.6.0"
         },
         "runtime": {
           "YoutubeDownloader.dll": {}
@@ -24,22 +25,60 @@
           }
         }
       },
-      "CliWrap/3.10.0": {
+      "CliWrap/3.10.1": {
         "runtime": {
           "lib/net10.0/CliWrap.dll": {
-            "assemblyVersion": "3.10.0.0",
-            "fileVersion": "3.10.0.0"
+            "assemblyVersion": "3.10.1.0",
+            "fileVersion": "3.10.1.0"
           }
         }
       },
-      "Microsoft.AspNetCore.OpenApi/10.0.0": {
+      "JsonExtensions/1.2.0": {
+        "runtime": {
+          "lib/net5.0/JsonExtensions.dll": {
+            "assemblyVersion": "1.2.0.0",
+            "fileVersion": "1.2.0.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.OpenApi/10.0.9": {
         "dependencies": {
           "Microsoft.OpenApi": "2.0.0"
         },
         "runtime": {
           "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
-            "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.25.52411"
+            "assemblyVersion": "10.0.9.0",
+            "fileVersion": "10.0.926.27113"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore/10.0.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.4"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.dll": {
+            "assemblyVersion": "10.0.4.0",
+            "fileVersion": "10.0.426.12010"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Abstractions/10.0.4": {
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "assemblyVersion": "10.0.4.0",
+            "fileVersion": "10.0.426.12010"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Relational/10.0.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.4"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll": {
+            "assemblyVersion": "10.0.4.0",
+            "fileVersion": "10.0.426.12010"
           }
         }
       },
@@ -51,26 +90,48 @@
           }
         }
       },
-      "YoutubeExplode/6.5.7": {
-        "dependencies": {
-          "AngleSharp": "1.4.0"
-        },
+      "Npgsql/10.0.3": {
         "runtime": {
-          "lib/net10.0/YoutubeExplode.dll": {
-            "assemblyVersion": "6.5.7.0",
-            "fileVersion": "6.5.7.0"
+          "lib/net10.0/Npgsql.dll": {
+            "assemblyVersion": "10.0.3.0",
+            "fileVersion": "10.0.3.0"
           }
         }
       },
-      "YoutubeExplode.Converter/6.5.7": {
+      "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.2": {
         "dependencies": {
-          "CliWrap": "3.10.0",
-          "YoutubeExplode": "6.5.7"
+          "Microsoft.EntityFrameworkCore": "10.0.4",
+          "Microsoft.EntityFrameworkCore.Relational": "10.0.4",
+          "Npgsql": "10.0.3"
+        },
+        "runtime": {
+          "lib/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
+            "assemblyVersion": "10.0.2.0",
+            "fileVersion": "10.0.2.0"
+          }
+        }
+      },
+      "YoutubeExplode/6.6.0": {
+        "dependencies": {
+          "AngleSharp": "1.4.0",
+          "JsonExtensions": "1.2.0"
+        },
+        "runtime": {
+          "lib/net10.0/YoutubeExplode.dll": {
+            "assemblyVersion": "6.6.0.0",
+            "fileVersion": "6.6.0.0"
+          }
+        }
+      },
+      "YoutubeExplode.Converter/6.6.0": {
+        "dependencies": {
+          "CliWrap": "3.10.1",
+          "YoutubeExplode": "6.6.0"
         },
         "runtime": {
           "lib/net10.0/YoutubeExplode.Converter.dll": {
-            "assemblyVersion": "6.5.7.0",
-            "fileVersion": "6.5.7.0"
+            "assemblyVersion": "6.6.0.0",
+            "fileVersion": "6.6.0.0"
           }
         }
       }
@@ -89,19 +150,47 @@
       "path": "anglesharp/1.4.0",
       "hashPath": "anglesharp.1.4.0.nupkg.sha512"
     },
-    "CliWrap/3.10.0": {
+    "CliWrap/3.10.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Igph39WNImUFqQrpTeBDPafcCnM1u/8IooZHqMRF/5JdV5H78p+AbZkeYY1Nkz1WlbI/Gt2Hq/3rYh55jxRF9Q==",
-      "path": "cliwrap/3.10.0",
-      "hashPath": "cliwrap.3.10.0.nupkg.sha512"
+      "sha512": "sha512-C+WzXwzpQsJVNqvuh19ZO/bw/vR43L+DC/CmvK+PATUBkail2AWYE6an17dOGgWaVGzF9sU28YwRwfNfkPrQdg==",
+      "path": "cliwrap/3.10.1",
+      "hashPath": "cliwrap.3.10.1.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.OpenApi/10.0.0": {
+    "JsonExtensions/1.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0aqIF1t+sA2T62LIeMtXGSiaV7keGQaJnvwwmu+htQdjCaKYARfXAeqp4nHH9y2etpilyZ/tnQzZg4Ilmo/c4Q==",
-      "path": "microsoft.aspnetcore.openapi/10.0.0",
-      "hashPath": "microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512"
+      "sha512": "sha512-ujtrK6m5BQVQLEteLfl54upN7Z59c1ZqEKmU3OlYriqnV74dIgIlNM2vkcgn2AuZEItQDNORD/2H1biI/asOdg==",
+      "path": "jsonextensions/1.2.0",
+      "hashPath": "jsonextensions.1.2.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.OpenApi/10.0.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1ihb8FO9cGgEK1/m3CTtT/SfnynwmiZib0W2pcDVj3KSWk/Sca4VOXEtaptKQc582zpFrzTFiwkGRCglt6H+WQ==",
+      "path": "microsoft.aspnetcore.openapi/10.0.9",
+      "hashPath": "microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore/10.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kzTsfFK2GCytp6DDTfQOmxPU4gbGdrIlP7PxrxF3ESNLtfXrC8BoUVZENBN2WORlZPAD7CVX6AYIglgkpXQooA==",
+      "path": "microsoft.entityframeworkcore/10.0.4",
+      "hashPath": "microsoft.entityframeworkcore.10.0.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Abstractions/10.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qDcJqCfN1XYyX0ID/Hd9/kQTRvlia8S+Yuwyl9uFhBIKnOCbl9WMdGQCzbZUKbkpkfvf3P9CDdXsnxHyE3O0Aw==",
+      "path": "microsoft.entityframeworkcore.abstractions/10.0.4",
+      "hashPath": "microsoft.entityframeworkcore.abstractions.10.0.4.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Relational/10.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DOTjTHy93W3TwpMLM4SCm0n57Sc0Jj3+m2S6LSTstKyBB34eT1UouaMS19mpWwvtj42+sRiEjA3+rOTNoNzXFQ==",
+      "path": "microsoft.entityframeworkcore.relational/10.0.4",
+      "hashPath": "microsoft.entityframeworkcore.relational.10.0.4.nupkg.sha512"
     },
     "Microsoft.OpenApi/2.0.0": {
       "type": "package",
@@ -110,19 +199,33 @@
       "path": "microsoft.openapi/2.0.0",
       "hashPath": "microsoft.openapi.2.0.0.nupkg.sha512"
     },
-    "YoutubeExplode/6.5.7": {
+    "Npgsql/10.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oIJpcxpgSUaPxg73iYj1a0hckbCbOHOrE1OzeCH9lNf6oRjJp2awOyPaWvf1qRm6kYFJ88FktdMeT+lGyNUcvA==",
-      "path": "youtubeexplode/6.5.7",
-      "hashPath": "youtubeexplode.6.5.7.nupkg.sha512"
+      "sha512": "sha512-7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w==",
+      "path": "npgsql/10.0.3",
+      "hashPath": "npgsql.10.0.3.nupkg.sha512"
     },
-    "YoutubeExplode.Converter/6.5.7": {
+    "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-jzZfBqfnC3G8ewxc75dddrpA5I4eI9+FFGO2IwrWwEyXQFgq2XxzstaaZ52lBQmCH5EqY3XV476gsKnIDGa11Q==",
-      "path": "youtubeexplode.converter/6.5.7",
-      "hashPath": "youtubeexplode.converter.6.5.7.nupkg.sha512"
+      "sha512": "sha512-PsNYgPOSW41Xx19gin7y4EdZAPteWr9Cb01XkdObxOsPzi+mgBupBEN7J7+erXFsROPOILM7MlIoO9QzL8+LGQ==",
+      "path": "npgsql.entityframeworkcore.postgresql/10.0.2",
+      "hashPath": "npgsql.entityframeworkcore.postgresql.10.0.2.nupkg.sha512"
+    },
+    "YoutubeExplode/6.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DCFAmPvADs/ZB3pB24kLFzVY/1o6iECqJ7IL9LKi4zkSZLgcXDwFbOJe3vd2K3FBw36Xa3O/QMv10zelT7hjfA==",
+      "path": "youtubeexplode/6.6.0",
+      "hashPath": "youtubeexplode.6.6.0.nupkg.sha512"
+    },
+    "YoutubeExplode.Converter/6.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kARdxk9iw785lmQ6ekWwMIN+4+wA/la4zyxyuuVOB+s0Jj4+JpGGaofmquxK9UbD8QrHZSUtu8dHLftTfuYkfA==",
+      "path": "youtubeexplode.converter/6.6.0",
+      "hashPath": "youtubeexplode.converter.6.6.0.nupkg.sha512"
     }
   }
 }

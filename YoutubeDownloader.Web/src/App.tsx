@@ -96,11 +96,11 @@ export default function App() {
     let downloadUrl: string
 
     if (selectedStream.type === 'audio-only') {
-        downloadUrl = `/api/video/download?url=${encodedUrl}&audioOnly=true`
+      downloadUrl = `/api/video/download?url=${encodedUrl}&audioOnly=true`
     } else if (selectedStream.type === 'adaptive') {
-        downloadUrl = `/api/video/download?url=${encodedUrl}&type=adaptive&maxHeight=${selectedStream.maxHeight}`
+      downloadUrl = `/api/video/download?url=${encodedUrl}&type=adaptive&maxHeight=${selectedStream.maxHeight}`
     } else {
-        downloadUrl = `/api/video/download?url=${encodedUrl}&type=muxed&quality=${encodeURIComponent(selectedStream.quality)}`
+      downloadUrl = `/api/video/download?url=${encodedUrl}&type=muxed&quality=${encodeURIComponent(selectedStream.quality)}`
     }
 
     const link = document.createElement('a')
@@ -109,7 +109,7 @@ export default function App() {
     link.click()
     document.body.removeChild(link)
     setTimeout(() => setIsDownloading(false), 2000)
-}, [selectedStream, url])
+  }, [selectedStream, url])
 
   return (
     <div className="app">

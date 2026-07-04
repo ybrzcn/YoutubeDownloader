@@ -36,3 +36,9 @@
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/YoutubeDownloader.genruntimeconfig.cache
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/ref/YoutubeDownloader.dll
 /Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/obj/Debug/net10.0/YoutubeDownloader.sourcelink.json
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/JsonExtensions.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/Microsoft.EntityFrameworkCore.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/Microsoft.EntityFrameworkCore.Relational.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/Npgsql.dll
+/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/bin/Debug/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
