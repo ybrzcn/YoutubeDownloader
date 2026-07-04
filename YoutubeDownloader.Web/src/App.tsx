@@ -62,6 +62,7 @@ export default function App() {
   const [selectedStream, setSelectedStream] = useState<StreamOption | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [downloadProgress, setDownloadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
   const fetchInfo = useCallback(async () => {
@@ -89,27 +90,53 @@ export default function App() {
     }
   }, [url, t])
 
-  const startDownload = useCallback(() => {
+  const startDownload = useCallback(async () => {
     if (!selectedStream || !url.trim()) return
     setIsDownloading(true)
-    const encodedUrl = encodeURIComponent(url.trim())
-    let downloadUrl: string
+    setDownloadProgress(0)
+    setError(null)
 
-    if (selectedStream.type === 'audio-only') {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&audioOnly=true`
-    } else if (selectedStream.type === 'adaptive') {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&type=adaptive&maxHeight=${selectedStream.maxHeight}`
-    } else {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&type=muxed&quality=${encodeURIComponent(selectedStream.quality)}`
+    try {
+      // Start an async job so the request returns instantly (avoids Cloudflare's
+      // 100s timeout); then poll until the file is ready and fetch it.
+      const res = await fetch('/api/video/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: url.trim(),
+          type: selectedStream.type === 'audio-only' ? 'audio' : selectedStream.type,
+          quality: selectedStream.quality,
+          maxHeight: selectedStream.maxHeight,
+          audioOnly: selectedStream.type === 'audio-only',
+        }),
+      })
+      if (!res.ok) throw new Error()
+      const { jobId } = await res.json()
+
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        await new Promise(r => setTimeout(r, 1500))
+        const statusRes = await fetch(`/api/video/download/${jobId}`)
+        if (!statusRes.ok) throw new Error()
+        const data = await statusRes.json()
+        if (typeof data.progress === 'number') setDownloadProgress(data.progress)
+
+        if (data.status === 'ready') {
+          const link = document.createElement('a')
+          link.href = `/api/video/download/${jobId}/file`
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+          break
+        }
+        if (data.status === 'error') throw new Error(data.error || undefined)
+      }
+    } catch {
+      setError(t.error)
+    } finally {
+      setTimeout(() => setIsDownloading(false), 2000)
     }
-
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    setTimeout(() => setIsDownloading(false), 2000)
-  }, [selectedStream, url])
+  }, [selectedStream, url, t])
 
   return (
     <div className="app">
@@ -206,7 +233,10 @@ export default function App() {
                 {isDownloading ? (
                   <>
                     <span className="spinner" />
-                    <span>{t.downloading}</span>
+                    <span>
+                      {t.downloading}
+                      {downloadProgress > 0 && downloadProgress < 100 ? ` ${downloadProgress}%` : ''}
+                    </span>
                   </>
                 ) : selectedStream.type === 'audio-only' ? (
                   t.downloadAudio

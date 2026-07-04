@@ -1,14 +1,20 @@
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
 using YoutubeDownloader.Models;
 
 namespace YoutubeDownloader.Services;
 
-public class VideoService : IVideoService
+public partial class VideoService : IVideoService
 {
     private readonly IMemoryCache _cache;
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
+
+    [GeneratedRegex(@"\[download\]\s+(\d+(?:\.\d+)?)%")]
+    private static partial Regex ProgressRegex();
 
     public VideoService(IMemoryCache cache)
     {
@@ -38,6 +44,47 @@ public class VideoService : IVideoService
         }
 
         return output.Trim();
+    }
+
+    // Runs a download command, streaming stdout line-by-line to surface progress
+    // (yt-dlp writes "[download]  12.3% of ..." with --newline).
+    private async Task RunYtDlpDownload(string args, IProgress<double>? progress)
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = "yt-dlp",
+            Arguments = $"--newline {args}",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using var process = Process.Start(psi)!;
+
+        var errorBuilder = new StringBuilder();
+        process.ErrorDataReceived += (_, e) =>
+        {
+            if (e.Data is not null) errorBuilder.AppendLine(e.Data);
+        };
+        process.BeginErrorReadLine();
+
+        string? line;
+        while ((line = await process.StandardOutput.ReadLineAsync()) is not null)
+        {
+            if (progress is null) continue;
+            var match = ProgressRegex().Match(line);
+            if (match.Success &&
+                double.TryParse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var pct))
+            {
+                progress.Report(pct);
+            }
+        }
+
+        await process.WaitForExitAsync();
+
+        if (process.ExitCode != 0)
+            throw new Exception($"yt-dlp error: {errorBuilder}");
     }
 
     public async Task<VideoInfoResponse> GetVideoInfoAsync(string url)
@@ -128,13 +175,13 @@ public class VideoService : IVideoService
         return title;
     }
 
-    public async Task DownloadMuxedAsync(string url, string quality, Stream outputStream)
+    public async Task DownloadMuxedAsync(string url, string quality, Stream outputStream, IProgress<double>? progress = null)
     {
         var tempFile = Path.GetTempFileName() + ".mp4";
         try
         {
             var height = quality.Replace("p", "");
-            await RunYtDlp($"-f \"best[height<={height}][ext=mp4]/best[ext=mp4]\" -o \"{tempFile}\" \"{url}\"");
+            await RunYtDlpDownload($"-f \"best[height<={height}][ext=mp4]/best[ext=mp4]\" -o \"{tempFile}\" \"{url}\"", progress);
             await using var fs = File.OpenRead(tempFile);
             await fs.CopyToAsync(outputStream);
         }
@@ -144,17 +191,17 @@ public class VideoService : IVideoService
         }
     }
 
-    public async Task DownloadAdaptiveAsync(string url, int maxHeight, string outputPath)
+    public async Task DownloadAdaptiveAsync(string url, int maxHeight, string outputPath, IProgress<double>? progress = null)
     {
-        await RunYtDlp($"-f \"bestvideo[height<={maxHeight}][ext=mp4]+bestaudio[ext=m4a]/best[height<={maxHeight}]\" --merge-output-format mp4 -o \"{outputPath}\" \"{url}\"");
+        await RunYtDlpDownload($"-f \"bestvideo[height<={maxHeight}][ext=mp4]+bestaudio[ext=m4a]/best[height<={maxHeight}]\" --merge-output-format mp4 -o \"{outputPath}\" \"{url}\"", progress);
     }
 
-    public async Task DownloadAudioAsync(string url, Stream outputStream)
+    public async Task DownloadAudioAsync(string url, Stream outputStream, IProgress<double>? progress = null)
     {
         var tempFile = Path.GetTempFileName() + ".m4a";
         try
         {
-            await RunYtDlp($"-f \"bestaudio[ext=m4a]/bestaudio\" -o \"{tempFile}\" \"{url}\"");
+            await RunYtDlpDownload($"-f \"bestaudio[ext=m4a]/bestaudio\" -o \"{tempFile}\" \"{url}\"", progress);
             await using var fs = File.OpenRead(tempFile);
             await fs.CopyToAsync(outputStream);
         }

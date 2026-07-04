@@ -1,10 +1,18 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using YoutubeDownloader.Models;
 using YoutubeDownloader.Services;
 
 namespace YoutubeDownloader.Controllers;
 
 public record VideoInfoRequest(string Url);
+
+public record DownloadRequest(
+    string Url,
+    string Type = "muxed",
+    string Quality = "360p",
+    int MaxHeight = 720,
+    bool AudioOnly = false);
 
 [ApiController]
 [Route("api/[controller]")]
@@ -12,11 +20,13 @@ public class VideoController : ControllerBase
 {
     private readonly IVideoService _videoService;
     private readonly LogService _logService;
+    private readonly DownloadJobService _jobService;
 
-    public VideoController(IVideoService videoService, LogService logService)
+    public VideoController(IVideoService videoService, LogService logService, DownloadJobService jobService)
     {
         _videoService = videoService;
         _logService = logService;
+        _jobService = jobService;
     }
 
     [HttpPost("info")]
@@ -46,69 +56,64 @@ public class VideoController : ControllerBase
         }
     }
 
-    [HttpGet("download")]
-    public async Task<IActionResult> Download(
-        [FromQuery] string url,
-        [FromQuery] string type = "muxed",
-        [FromQuery] string quality = "360p",
-        [FromQuery] int maxHeight = 720,
-        [FromQuery] bool audioOnly = false)
+    // Kicks off an async download job so the request returns immediately and never
+    // trips Cloudflare's 100s origin timeout. The heavy yt-dlp/ffmpeg work happens
+    // in the background; the client polls status and then fetches the ready file.
+    [HttpPost("download")]
+    public IActionResult StartDownload([FromBody] DownloadRequest request)
     {
-        var sw = Stopwatch.StartNew();
-        try
+        if (string.IsNullOrWhiteSpace(request.Url))
+            return BadRequest(new { error = "url is required" });
+
+        var ip = HttpContext.Request.Headers["CF-Connecting-IP"].FirstOrDefault()
+                 ?? HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                 ?? HttpContext.Connection.RemoteIpAddress?.ToString()
+                 ?? "unknown";
+
+        var job = _jobService.Enqueue(new DownloadJob
         {
-            var title = await _videoService.GetVideoTitleAsync(url);
-            var safeTitle = string.Join("_", title.Split(Path.GetInvalidFileNameChars()));
-            var selectedQuality = audioOnly ? "audio" : type == "adaptive" ? $"{maxHeight}p" : quality;
+            Url = request.Url.Trim(),
+            Type = request.Type,
+            Quality = request.Quality,
+            MaxHeight = request.MaxHeight,
+            AudioOnly = request.AudioOnly,
+            Ip = ip,
+            Country = HttpContext.Request.Headers["CF-IPCountry"].FirstOrDefault(),
+            UserAgent = HttpContext.Request.Headers.UserAgent.FirstOrDefault(),
+            Endpoint = HttpContext.Request.Path
+        });
 
-            if (audioOnly)
-            {
-                var ms = new MemoryStream();
-                await _videoService.DownloadAudioAsync(url, ms);
-                ms.Position = 0;
-                sw.Stop();
-                await _logService.LogRequestAsync(HttpContext, "download",
-                    videoUrl: url, videoTitle: title, quality: "audio",
-                    success: true, durationMs: sw.ElapsedMilliseconds);
-                return File(ms, "audio/mp4", $"{safeTitle}.m4a");
-            }
+        return Accepted(new { jobId = job.Id });
+    }
 
-            if (type == "adaptive")
-            {
-                var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp4");
-                try
-                {
-                    await _videoService.DownloadAdaptiveAsync(url, maxHeight, tempPath);
-                    var bytes = await System.IO.File.ReadAllBytesAsync(tempPath);
-                    sw.Stop();
-                    await _logService.LogRequestAsync(HttpContext, "download",
-                        videoUrl: url, videoTitle: title, quality: selectedQuality,
-                        success: true, durationMs: sw.ElapsedMilliseconds);
-                    return File(bytes, "video/mp4", $"{safeTitle}.mp4");
-                }
-                finally
-                {
-                    if (System.IO.File.Exists(tempPath))
-                        System.IO.File.Delete(tempPath);
-                }
-            }
+    [HttpGet("download/{jobId}")]
+    public IActionResult GetDownloadStatus(string jobId)
+    {
+        var job = _jobService.Get(jobId);
+        if (job is null)
+            return NotFound(new { error = "job not found" });
 
-            var memStream = new MemoryStream();
-            await _videoService.DownloadMuxedAsync(url, quality, memStream);
-            memStream.Position = 0;
-            sw.Stop();
-            await _logService.LogRequestAsync(HttpContext, "download",
-                videoUrl: url, videoTitle: title, quality: selectedQuality,
-                success: true, durationMs: sw.ElapsedMilliseconds);
-            return File(memStream, "video/mp4", $"{safeTitle}.mp4");
-        }
-        catch (Exception ex)
+        return Ok(new
         {
-            sw.Stop();
-            await _logService.LogRequestAsync(HttpContext, "download",
-                videoUrl: url, success: false, error: ex.Message,
-                durationMs: sw.ElapsedMilliseconds);
-            return BadRequest(new { error = ex.Message });
-        }
+            status = job.Status.ToString().ToLowerInvariant(),
+            progress = job.Progress,
+            fileName = job.FileName,
+            error = job.Error
+        });
+    }
+
+    [HttpGet("download/{jobId}/file")]
+    public IActionResult GetDownloadFile(string jobId)
+    {
+        var job = _jobService.Get(jobId);
+        if (job is null)
+            return NotFound(new { error = "job not found" });
+        if (job.Status != DownloadJobStatus.Ready || job.FilePath is null || !System.IO.File.Exists(job.FilePath))
+            return Conflict(new { error = "file not ready", status = job.Status.ToString().ToLowerInvariant() });
+
+        // File already sits on disk, so time-to-first-byte is immediate and the
+        // (potentially long) transfer streams without hitting the origin timeout.
+        return PhysicalFile(job.FilePath, job.ContentType ?? "application/octet-stream",
+            job.FileName ?? "download", enableRangeProcessing: true);
     }
 }

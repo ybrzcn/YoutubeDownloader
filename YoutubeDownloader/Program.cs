@@ -9,6 +9,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddSingleton<LogService>();
+builder.Services.AddSingleton<DownloadJobService>();
+builder.Services.AddHostedService<DownloadJobWorker>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql("Host=localhost;Port=5432;Database=ytdownloader;Username=aybar;Password=aybar1234"));
