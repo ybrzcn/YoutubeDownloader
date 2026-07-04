@@ -89,26 +89,37 @@ export default function App() {
     }
   }, [url, t])
 
-  const startDownload = useCallback(() => {
+  const startDownload = useCallback(async () => {
     if (!selectedStream || !url.trim()) return
     setIsDownloading(true)
-    const encodedUrl = encodeURIComponent(url.trim())
-    let downloadUrl: string
+    setError(null)
+    try {
+      const encodedUrl = encodeURIComponent(url.trim())
+      let apiUrl: string
 
-    if (selectedStream.type === 'audio-only') {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&audioOnly=true`
-    } else if (selectedStream.type === 'adaptive') {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&type=adaptive&maxHeight=${selectedStream.maxHeight}`
-    } else {
-      downloadUrl = `/api/video/download?url=${encodedUrl}&type=muxed&quality=${encodeURIComponent(selectedStream.quality)}`
+      if (selectedStream.type === 'audio-only') {
+        apiUrl = `/api/video/direct-url?url=${encodedUrl}&audioOnly=true`
+      } else if (selectedStream.type === 'adaptive') {
+        apiUrl = `/api/video/direct-url?url=${encodedUrl}&type=adaptive&maxHeight=${selectedStream.maxHeight}`
+      } else {
+        apiUrl = `/api/video/direct-url?url=${encodedUrl}&type=muxed&maxHeight=${selectedStream.maxHeight}`
+      }
+
+      const res = await fetch(apiUrl)
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+
+      const link = document.createElement('a')
+      link.href = data.url
+      link.download = `${data.title}.mp4`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch {
+      setError('İndirme başlatılamadı.')
+    } finally {
+      setTimeout(() => setIsDownloading(false), 2000)
     }
-
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    setTimeout(() => setIsDownloading(false), 2000)
   }, [selectedStream, url])
 
   return (
