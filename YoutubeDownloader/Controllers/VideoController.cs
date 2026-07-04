@@ -46,6 +46,35 @@ public class VideoController : ControllerBase
         }
     }
 
+    [HttpGet("direct-url")]
+    public async Task<IActionResult> GetDirectUrl(
+        [FromQuery] string url,
+        [FromQuery] string type = "adaptive",
+        [FromQuery] int maxHeight = 720,
+        [FromQuery] bool audioOnly = false)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            var directUrl = await ((VideoService)_videoService).GetDirectUrlAsync(url, type, maxHeight, audioOnly);
+            var title = await _videoService.GetVideoTitleAsync(url);
+            sw.Stop();
+            await _logService.LogRequestAsync(HttpContext, "download",
+                videoUrl: url, videoTitle: title,
+                quality: audioOnly ? "audio" : $"{maxHeight}p",
+                success: true, durationMs: sw.ElapsedMilliseconds);
+            return Ok(new { url = directUrl, title });
+        }
+        catch (Exception ex)
+        {
+            sw.Stop();
+            await _logService.LogRequestAsync(HttpContext, "download",
+                videoUrl: url, success: false, error: ex.Message,
+                durationMs: sw.ElapsedMilliseconds);
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
     [HttpGet("download")]
     public async Task<IActionResult> Download(
         [FromQuery] string url,
