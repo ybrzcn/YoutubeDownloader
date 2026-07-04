@@ -1,26 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using YoutubeDownloader.Data;
 using YoutubeDownloader.Services;
-using YoutubeExplode;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-
 builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<YoutubeClient>(sp =>
-{
-    var handler = new HttpClientHandler
-    {
-        UseCookies = true,
-        CookieContainer = new System.Net.CookieContainer()
-    };
-    var httpClient = new HttpClient(handler)
-    {
-        Timeout = TimeSpan.FromMinutes(5)
-    };
-    return new YoutubeClient(httpClient);
-});
 builder.Services.AddScoped<IVideoService, VideoService>();
+builder.Services.AddSingleton<LogService>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql("Host=localhost;Port=5432;Database=ytdownloader;Username=aybar;Password=aybar1234"));
 
 builder.Services.AddCors(options =>
 {
@@ -35,6 +26,12 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {

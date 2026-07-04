@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "w83ZUkj35Dk=",
+  "dgSpecHash": "9mvU8c3tpSU=",
   "success": true,
   "projectFilePath": "/Users/aybarozcan/repos/YoutubeDownloader/YoutubeDownloader/YoutubeDownloader.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,13 @@
     "/Users/aybarozcan/.nuget/packages/cliwrap/3.10.1/cliwrap.3.10.1.nupkg.sha512",
     "/Users/aybarozcan/.nuget/packages/jsonextensions/1.2.0/jsonextensions.1.2.0.nupkg.sha512",
     "/Users/aybarozcan/.nuget/packages/microsoft.aspnetcore.openapi/10.0.9/microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.entityframeworkcore/10.0.4/microsoft.entityframeworkcore.10.0.4.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.4/microsoft.entityframeworkcore.abstractions.10.0.4.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.4/microsoft.entityframeworkcore.analyzers.10.0.4.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.4/microsoft.entityframeworkcore.relational.10.0.4.nupkg.sha512",
     "/Users/aybarozcan/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/npgsql/10.0.3/npgsql.10.0.3.nupkg.sha512",
+    "/Users/aybarozcan/.nuget/packages/npgsql.entityframeworkcore.postgresql/10.0.2/npgsql.entityframeworkcore.postgresql.10.0.2.nupkg.sha512",
     "/Users/aybarozcan/.nuget/packages/youtubeexplode/6.6.0/youtubeexplode.6.6.0.nupkg.sha512",
     "/Users/aybarozcan/.nuget/packages/youtubeexplode.converter/6.6.0/youtubeexplode.converter.6.6.0.nupkg.sha512"
   ],
