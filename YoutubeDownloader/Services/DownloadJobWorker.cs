@@ -50,13 +50,29 @@ public class DownloadJobWorker : BackgroundService
     {
         var sw = Stopwatch.StartNew();
         job.Status = DownloadJobStatus.Processing;
+        _logger.LogInformation(
+            "Job {JobId} started: url={Url} type={Type} quality={Quality} maxHeight={MaxHeight} audioOnly={AudioOnly}",
+            job.Id, job.Url, job.Type, job.Quality, job.MaxHeight, job.AudioOnly);
 
         using var scope = _scopeFactory.CreateScope();
         var videoService = scope.ServiceProvider.GetRequiredService<IVideoService>();
 
         var title = await videoService.GetVideoTitleAsync(job.Url);
+        _logger.LogInformation("Job {JobId} title resolved ({Elapsed}ms): {Title}",
+            job.Id, sw.ElapsedMilliseconds, title);
         var safeTitle = string.Join("_", title.Split(Path.GetInvalidFileNameChars()));
-        var progress = new Progress<double>(pct => job.Progress = (int)Math.Clamp(pct, 0, 100));
+        var lastLogged = -10;
+        var progress = new Progress<double>(pct =>
+        {
+            job.Progress = (int)Math.Clamp(pct, 0, 100);
+            if (job.Progress >= lastLogged + 10)
+            {
+                lastLogged = job.Progress;
+                _logger.LogInformation("Job {JobId} progress: {Progress}% ({Elapsed}ms)",
+                    job.Id, job.Progress, sw.ElapsedMilliseconds);
+            }
+        });
+        _logger.LogInformation("Job {JobId} downloading...", job.Id);
 
         string tempPath;
         string quality;
@@ -93,6 +109,10 @@ public class DownloadJobWorker : BackgroundService
         job.Status = DownloadJobStatus.Ready;
         job.CompletedAt = DateTime.UtcNow;
         sw.Stop();
+
+        var sizeMb = new FileInfo(tempPath).Length / 1024.0 / 1024.0;
+        _logger.LogInformation("Job {JobId} ready in {Elapsed}ms: {File} ({Size:F1} MB)",
+            job.Id, sw.ElapsedMilliseconds, job.FileName, sizeMb);
 
         await _logService.LogRequestAsync("download", job.Endpoint, job.Ip, job.Country, job.UserAgent,
             videoUrl: job.Url, videoTitle: title, quality: quality,
