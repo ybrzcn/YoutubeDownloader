@@ -26,7 +26,7 @@ public partial class VideoService : IVideoService
         var psi = new ProcessStartInfo
         {
             FileName = "yt-dlp",
-            Arguments = args,
+            Arguments = $"--force-ipv4 {args}",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -50,10 +50,13 @@ public partial class VideoService : IVideoService
     // (yt-dlp writes "[download]  12.3% of ..." with --newline).
     private async Task RunYtDlpDownload(string args, IProgress<double>? progress)
     {
+        // --force-ipv4: host has no working IPv6 route ([Errno 101]).
+        // Short socket timeout + few retries so an unreachable googlevideo host
+        // fails fast (~20s) with a clear error instead of hanging for minutes.
         var psi = new ProcessStartInfo
         {
             FileName = "yt-dlp",
-            Arguments = $"--newline {args}",
+            Arguments = $"--force-ipv4 --socket-timeout 10 --retries 2 --fragment-retries 2 --newline {args}",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
